@@ -5,44 +5,48 @@ namespace RequestCorrelation.Owin
     public static class OwinContextExtension
     {
         /// <summary>
-        /// The default header name used for storing the X-Request-ID on the IOwinRequest and IOwinResponse.
+        /// The Environment key used to store the host generated request id (correlation id).
         /// </summary>
-        private const string DefaultCorrelationHeaderName = "X-Request-ID";
+        private const string OwinRequestIdKey = "owin.RequestId";
 
         /// <summary>
-        /// Retrieves the correlation ID from the IOwinRequest.
-        /// </summary>
-        /// <param name="request">The <see cref="IOwinRequest"/>.</param>
-        /// <param name="requestIdName">The name of the Http Header to place the request correlation id.</param>
-        /// <returns>The correlation ID.</returns>
-        public static string GetRequestCorrelationId(this IOwinRequest request, string requestIdName = DefaultCorrelationHeaderName)
-        {
-            return request.Headers[requestIdName] ?? request.Query[requestIdName];
-        }
-
-        /// <summary>
-        /// Retrieves the correlation ID from the IOwinResponse.
-        /// </summary>
-        /// <param name="response">The <see cref="IOwinResponse"/>.</param>
-        /// <param name="requestIdName">The name of the Http Header to place the correlation id.</param>
-        /// <returns>The correlation ID.</returns>
-        public static string GetResponseCorrelationId(this IOwinResponse response, string requestIdName = DefaultCorrelationHeaderName)
-        {
-            return response.Headers[requestIdName];
-        }
-
-        /// <summary>
-        /// Sets the correlation id on IOwinRequest and IOwinResponse.
+        /// Sets the correlation id on IOwinRequest and IOwinResponse.  If the Owin.RequestId already exists a new one will not be generated.
+        /// Only if the Owin.RequestId is null, empty, whitespace, or non-existent will it be overriden.
         /// </summary>
         /// <param name="context">The <see cref="IOwinContext"/>.</param>
+        /// <param name="createCorrelationId">The Func to build a correlation ID.</param>
         /// <param name="requestIdName">The name of the Http Header to place the request correlation id.</param>
-        /// <param name="correlationId">The identifier used to correlate requests and responses.</param>
-        public static void SetCorrelationId(this IOwinContext context, string correlationId, string requestIdName = DefaultCorrelationHeaderName)
+        public static void SetCorrelationId(this IOwinContext context, CorrelationIdProperties properties)
         {
+            var correlationId = properties.GenerateId();
+            var requestIdName = properties.CorrelationIdHeaderName;
+            var environment = context.Environment;
+
+            // Update IOwinContext.Environment if it doesn't have a value.
+            var hasCorrelationId = environment.ContainsKey(OwinRequestIdKey) && !string.IsNullOrWhiteSpace(environment[OwinRequestIdKey].ToString());
+            if (hasCorrelationId) { correlationId = environment[OwinRequestIdKey].ToString(); }
+            else { environment[OwinRequestIdKey] = correlationId; }
+
+            // Apply correlation ID to Request and Response.
             var headerValue = new[] { correlationId };
             if (context.Request.Headers.ContainsKey(correlationId)){ context.Request.Headers[requestIdName] = correlationId; }
             else { context.Request.Headers.Add(requestIdName, headerValue); }
             context.Response.Headers.Add(requestIdName, headerValue);
+        }
+
+        /// <summary>
+        /// Retrieves the correlation ID from the IOwinContext.Evironment dictionary.
+        /// </summary>
+        /// <param name="context">The <see cref="IOwinContext"./></param>
+        /// <returns></returns>
+        public static string GetCorrelationId(this IOwinContext context)
+        {
+            var environment = context.Environment;
+            var hasCorrelationId = environment.ContainsKey(OwinRequestIdKey) && !string.IsNullOrWhiteSpace(environment[OwinRequestIdKey].ToString());
+            var correlationId = "";
+            if (hasCorrelationId) { correlationId = environment[OwinRequestIdKey].ToString(); }
+
+            return correlationId;
         }
     }
 }

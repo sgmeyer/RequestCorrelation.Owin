@@ -12,4 +12,3 @@ comming soon.
 
 ## Configuring the middleware
 
-comming soon.

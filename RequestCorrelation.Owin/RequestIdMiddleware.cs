@@ -8,14 +8,14 @@ namespace RequestCorrelation.Owin
     /// </summary>
     public class RequestIdMiddleware : OwinMiddleware
     {
-        private readonly RequestIdProperties _properties;
+        private readonly CorrelationIdProperties _properties;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RequestIdMiddleware"/>.
         /// </summary>
         /// <param name="next">The next owin middleware to execute.</param>
-        /// <param name="properties">The <see cref="RequestIdProperties"/> used to configure the middleware.</param>
-        public RequestIdMiddleware(OwinMiddleware next, RequestIdProperties properties) : base(next)
+        /// <param name="properties">The <see cref="CorrelationIdProperties"/> used to configure the middleware.</param>
+        public RequestIdMiddleware(OwinMiddleware next, CorrelationIdProperties properties) : base(next)
         {
             _properties = properties;
         }
@@ -27,9 +27,7 @@ namespace RequestCorrelation.Owin
         /// <returns></returns>
         public override async Task Invoke(IOwinContext context)
         {
-            var correlationId = context.Request.GetRequestCorrelationId(_properties.RequestIdName) ??
-                                _properties.GenerateId();
-            context.SetCorrelationId(correlationId, _properties.RequestIdName);
+            context.SetCorrelationId(_properties);
             await Next.Invoke(context);
         }
     }
