@@ -1,0 +1,8 @@
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\obj\Debug\RequestCorrelation.Owin.csprojResolveAssemblyReference.cache
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\bin\Debug\RequestCorrelation.Owin.dll
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\bin\Debug\RequestCorrelation.Owin.pdb
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\bin\Debug\Microsoft.Owin.dll
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\bin\Debug\Owin.dll
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\bin\Debug\Microsoft.Owin.xml
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\obj\Debug\RequestCorrelation.Owin.dll
+C:\Projects\Repos\RequestCorrelation.Owin\RequestCorrelation.Owin\obj\Debug\RequestCorrelation.Owin.pdb
