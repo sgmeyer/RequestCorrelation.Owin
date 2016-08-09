@@ -52,7 +52,7 @@
     <Compile Include="OwinMiddlewareExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestIdMiddleware.cs" />
-    <Compile Include="RequestIProperties.cs" />
+    <Compile Include="CorrelationIdProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

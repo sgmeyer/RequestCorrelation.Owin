@@ -14,7 +14,7 @@ Using NuGet open the _Package Managemer Console_ and run the following command:
 Install-Package RequestCorrelation.Owin
 ```
 
-Once, the NuGet package has been installed open the Startup.cs file and add the following code.  It is helpful to have this middleware be the first executed.
+The OWIN specification states the `owin.RequestId` data is optional for the host to include.  In many scenarios this data will already exist.  If you add the following middleware to the OWIN application it will generate a value for `owin.RequestId` if it already exists.  In the event your host already populates this data it will use the value assigned and add it using a request and response header.
 
 ```csharp
 // This code snipet uses the default values for CorrelationIdProperties.
@@ -26,7 +26,6 @@ properties.CorrelationIdHeaderName = "X-Request-ID";
 properties.GenerateId = () => Guid.NewGuid().ToString();
  
 app.UseRequestIds(properties);
-
 ```
 
 ## Configuring the middleware
