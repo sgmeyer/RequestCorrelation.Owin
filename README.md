@@ -8,7 +8,26 @@ When requests are processed by the middleware the IOwinContext.Environment dicti
 
 ## Installing the middleware
 
-comming soon.
+Using NuGet open the _Package Managemer Console_ and run the following command:
+
+```
+Install-Package RequestCorrelation.Owin
+```
+
+Once, the NuGet package has been installed open the Startup.cs file and add the following code.  It is helpful to have this middleware be the first executed.
+
+```csharp
+// This code snipet uses the default values for CorrelationIdProperties.
+// If you plan on using these default values simply call app.UseRequestIds()
+// without a parameter.
+
+var properties = new CorrelationIdProperties(); 
+properties.CorrelationIdHeaderName = "X-Request-ID";
+properties.GenerateId = () => Guid.NewGuid().ToString();
+ 
+app.UseRequestIds(properties);
+
+```
 
 ## Configuring the middleware
 
